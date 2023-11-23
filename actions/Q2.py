@@ -13,8 +13,16 @@ class Window(tk.Toplevel):
         ttk.Label(self, text="Modifier cette fonction en s'inspirant du code de F1, pour qu'elle affiche le(s) département(s) avec la température moyenne (c.a.d. moyenne des moyennes de toutes les mesures) la plus basse. \nSchéma attendu : (nom_region, nom_departement, temperature_moy_min)",
                   wraplength=500, anchor="center", font=('Helvetica', '10', 'bold')).grid(sticky="we", row=0)
 
-        #TODO Q2 Modifier la suite du code (en se basant sur le code de F1) pour répondre à Q2 hqhqhqh
+        columns = ('nom_departement', 'nom_region', 'temperature_moy_mesure')
+        query = """ WITH MoyenneParDep AS (
+                        SELECT code_departement, ROUND(AVG(temperature_moy_mesure), 2) as temperature 
+                        FROM Mesures
+                        GROUP BY code_departement
+                    )
+                    SELECT nom_departement, nom_region, MIN(temperature)
+                    FROM MoyenneParDep JOIN Departements USING (code_departement) JOIN Regions USING (code_region)
+                    GROUP BY code_region
+                """
 
-        # On définit les colonnes que l'on souhaite afficher dans la fenêtre et la requête
-
-        # On utilise la fonction createTreeViewDisplayQuery pour afficher les résultats de la requête
+        tree = display.createTreeViewDisplayQuery(self, columns, query,200)
+        tree.grid(row=0, sticky="nswe")
