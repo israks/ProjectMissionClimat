@@ -68,7 +68,17 @@ create table Chauffages (
     type_chaudiere_chauffage TEXT,
     constraint pk_chauffages primary key (id_travaux),
     constraint fk_chauffages foreign key (id_travaux) references Travaux(id_travaux),
+    constraint ck_energieavt_chauffage check (energie_avt_travaux_chauffage) in ("AUTRES", "BOIS", "ELECTRICITE", "FIOUL", "GAZ"),
+    constraint ck_energieinst_chauffage check (energie_installee_chauffage) in ("AUTRES", "BOIS", "ELECTRICITE", "FIOUL", "GAZ"),
+    constraint ck_generateur_chauffage check (generateur_chauffage) in ("AUTRES", "CHAUDIERE", "INSERT", "PAC", "POELE", "RADIATEUR"),
+    constraint ck_chaudiere_chauffage check (type_chaudiere_chauffage) in ("STANDARD", "AIR-EAU", "A CONDENSATION", "AUTRES", "AIR-AIR", "GEOTHERME", "HPE")
 );
 
-
---TODO Q4 Ajouter les créations des nouvelles tables
+create table Photovoltaiques (
+    id_travaux INTEGER,
+    puissance_installee_photovoltaique INTEGER,
+    type_panneaux_photovoltaique TEXT,
+    constraint pk_photovoltaiques primary key (id_travaux),
+    constraint fk_photovoltaiques foreign key (id_travaux) references Travaux(id_travaux),
+    constraint ck_photovoltaiques check (type_panneaux_photovoltaique) in ("MONOCRISTALLIN", "POLYCRISTALLIN")
+);
