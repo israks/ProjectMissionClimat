@@ -33,7 +33,7 @@ def createDB():
         print("Base de données créée avec succès.")
 
 # En cas de clic sur le bouton d'insertion de données
-#TODO Q4 Modifier la fonction insertDB pour insérer les données dans les nouvelles tables
+
 def insertDB():
     try:
         # '{}' : paramètre de la requête qui doit être interprété comme une chaine de caractères dans l'insert
