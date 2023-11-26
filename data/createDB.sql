@@ -49,24 +49,22 @@ create table Travaux (
 );
 
 create table Isolations (
-    id_travaux INTEGER,
+    id_travaux INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
     poste_isolation TEXT,
     isolant_isolation TEXT,
     epaisseur_isolation INTEGER,
     surface_isolation FLOAT,
-    constraint pk_isolation primary key (id_travaux),
     constraint fk_isolation foreign key (id_travaux) references Travaux(id_travaux),
     constraint ck_poste check (poste_isolation) in ("COMBLES PERDUES", "ITI", 'ITE', "RAMPANTS", "SARKING", "TOITURE TERRASSE", "PLANCHER BAS"),
     constraint ck_isolant check (isolant_isolation) in ("AUTRES", "LAINE VEGETALE", "LAINE MINERALE", "PLASTIQUES")
 );
 
 create table Chauffages (
-    id_travaux INTEGER,
+    id_travaux INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
     energie_avt_travaux_chauffage TEXT,
     energie_installee_chauffage TEXT,
     generateur_chauffage TEXT,
     type_chaudiere_chauffage TEXT,
-    constraint pk_chauffages primary key (id_travaux),
     constraint fk_chauffages foreign key (id_travaux) references Travaux(id_travaux),
     constraint ck_energieavt_chauffage check (energie_avt_travaux_chauffage) in ("AUTRES", "BOIS", "ELECTRICITE", "FIOUL", "GAZ"),
     constraint ck_energieinst_chauffage check (energie_installee_chauffage) in ("AUTRES", "BOIS", "ELECTRICITE", "FIOUL", "GAZ"),
@@ -75,10 +73,9 @@ create table Chauffages (
 );
 
 create table Photovoltaiques (
-    id_travaux INTEGER,
+    id_travaux INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT,
     puissance_installee_photovoltaique INTEGER,
     type_panneaux_photovoltaique TEXT,
-    constraint pk_photovoltaiques primary key (id_travaux),
     constraint fk_photovoltaiques foreign key (id_travaux) references Travaux(id_travaux),
     constraint ck_photovoltaiques check (type_panneaux_photovoltaique) in ("MONOCRISTALLIN", "POLYCRISTALLIN")
 );

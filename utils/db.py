@@ -92,6 +92,55 @@ def insertDB():
              ['code_insee_departement', 'date_obs', 'tmin', 'tmax', 'tmoy']
         )
 
+        # On ajoute les communes
+        read_csv_file(
+            "data/csv/Communes.csv", ';',
+            "insert into Communes values ({}, '{}', '{}', {}, {}, {}, {}, {}, '{}')",
+            ['Code Commune', 'Commune', 'Statut', 'Altitude Moyenne', 'Population', 'Superficie', 'Code Canton', 'Code Arrondissement', 'Code Département']
+        )
+
+        # On ajoute les Travaux d'Isolations dans Travaux
+        read_csv_file(
+            "data/csv/Isolations.csv", ';',
+            "insert into Travaux values ({}, {}, {}, '{}', {})",
+            ['cout_total_ht', 'cout_induit_ht', 'annee_travaux', 'type_logement', 'annee_construction']
+        )
+
+        # On ajoute les Isolations dans la table Isolations
+        read_csv_file(
+            "data/csv/Isolations.csv", ';',
+            "insert into Isolations values ('{}', '{}', {}, {})",
+            ['poste_isolation', 'isolant', 'epaisseur', 'surface']
+        )
+
+        # On ajoute les Travaux de Chauffage dans Travaux
+        read_csv_file(
+            "data/csv/Chauffage.csv", ';',
+            "insert into Travaux values ({}, {}, {}, '{}', {})",
+            ['cout_total_ht', 'cout_induit_ht', 'annee_travaux', 'type_logement', 'annee_construction']
+        )
+
+        # On ajoute les Chauffages dans la table Chauffages
+        read_csv_file(
+            "data/csv/Chauffage.csv", ';',
+            "insert into Chauffages values ('{}', '{}', '{}', '{}')",
+            ['energie_chauffage_avt_travaux', 'energie_chauffage_installee', 'generateur', 'type_chaudiere']
+        )
+
+        # On ajoute les Travaux de Photovolatiques dans Travaux
+        read_csv_file(
+            "data/csv/Photovoltaique.csv", ';',
+            "insert into Travaux values ({}, {}, {}, '{}', {})",
+            ['cout_total_ht', 'cout_induit_ht', 'annee_travaux', 'type_logement', 'annee_construction']
+        )
+
+        # On ajoute les Photovoltaiques dans Photovoltaiques
+        read_csv_file(
+            "data/csv/Photovoltaique.csv", ';',
+            "insert into Photovoltaiques values ({}, '{}')",
+            ['puissance_installee', 'type_panneaux']
+        )
+
     except Exception as e:
         print ("L'erreur suivante s'est produite lors de l'insertion des données : " + repr(e) + ".")
     else:
