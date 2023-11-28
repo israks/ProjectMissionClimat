@@ -59,7 +59,7 @@ def insertDB():
         # On ajoute les départements référencés avec les anciennes régions
         read_csv_file(
             "data/csv/Communes.csv", ';',
-            "insert into Departements values ('{}','{}', {},'')",
+            "insert into Departements (code_departement, nom_departement, code_region) values ('{}','{}', {})",
             ['Code Département', 'Département', 'Code Région']
         )
 
@@ -109,7 +109,7 @@ def insertDB():
         # On ajoute les Isolations dans la table Isolations
         read_csv_file(
             "data/csv/Isolation.csv", ';',
-            "insert into Isolations values ('{}', '{}', {}, {})",
+            "insert into Isolations (poste_isolation, isolant_isolation, epaisseur_isolation, surface_isolation) values ('{}', '{}', {}, {})",
             ['poste_isolation', 'isolant', 'epaisseur', 'surface']
         )
 
@@ -123,7 +123,7 @@ def insertDB():
         # On ajoute les Chauffages dans la table Chauffages
         read_csv_file(
             "data/csv/Chauffage.csv", ';',
-            "insert into Chauffages values ('{}', '{}', '{}', '{}')",
+            "insert into Chauffages (energie_avt_travaux_chauffage, energie_installee_chauffage, generateur_chauffage, type_chaudiere_chauffage) values ('{}', '{}', '{}', '{}')",
             ['energie_chauffage_avt_travaux', 'energie_chauffage_installee', 'generateur', 'type_chaudiere']
         )
 
@@ -137,7 +137,7 @@ def insertDB():
         # On ajoute les Photovoltaiques dans Photovoltaiques
         read_csv_file(
             "data/csv/Photovoltaique.csv", ';',
-            "insert into Photovoltaiques values ({}, '{}')",
+            "insert into Photovoltaiques (puissance_installee_photovoltaique, type_panneaux_photovoltaique) values ({}, '{}')",
             ['puissance_installee', 'type_panneaux']
         )
 

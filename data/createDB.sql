@@ -1,10 +1,3 @@
-create table Regions (
-    code_region INTEGER,
-    nom_region TEXT,
-    constraint pk_regions primary key (code_region)
-);
-
-
 create table Departements (
     code_departement TEXT,
     nom_departement TEXT,
@@ -14,6 +7,13 @@ create table Departements (
     constraint fk_region foreign key (code_region) references Regions(code_region),
     constraint ck_zoneclimatique check (zone_climatique in ('H1', 'H2', 'H3'))
 );
+
+create table Regions (
+    code_region INTEGER,
+    nom_region TEXT,
+    constraint pk_regions primary key (code_region)
+);
+
 
 create table Mesures (
     code_departement TEXT,
@@ -58,8 +58,8 @@ create table Isolations (
     epaisseur_isolation INTEGER,
     surface_isolation FLOAT,
     constraint fk_isolation foreign key (id_travaux) references Travaux(id_travaux),
-    constraint ck_poste check (poste_isolation in ('COMBLES PERDUES', "ITI", 'ITE', "RAMPANTS", "SARKING", "TOITURE TERRASSE", "PLANCHER BAS")),
-    constraint ck_isolant check (isolant_isolation in ("AUTRES", "LAINE VEGETALE", "LAINE MINERALE", "PLASTIQUES"))
+    constraint ck_poste check (poste_isolation in ('COMBLES PERDUES', 'ITI', 'ITE', 'RAMPANTS', 'SARKING', 'TOITURE TERRASSE', 'PLANCHER BAS')),
+    constraint ck_isolant check (isolant_isolation in ('AUTRES', 'LAINE VEGETALE', 'LAINE MINERALE', 'PLASTIQUES'))
 );
 
 create table Chauffages (
@@ -69,10 +69,10 @@ create table Chauffages (
     generateur_chauffage TEXT,
     type_chaudiere_chauffage TEXT,
     constraint fk_chauffages foreign key (id_travaux) references Travaux(id_travaux),
-    constraint ck_energieavt_chauffage check (energie_avt_travaux_chauffage in ("AUTRES", "BOIS", "ELECTRICITE", "FIOUL", "GAZ")),
-    constraint ck_energieinst_chauffage check (energie_installee_chauffage in ("AUTRES", "BOIS", "ELECTRICITE", "FIOUL", "GAZ")),
-    constraint ck_generateur_chauffage check (generateur_chauffage in ("AUTRES", "CHAUDIERE", "INSERT", "PAC", "POELE", "RADIATEUR")),
-    constraint ck_chaudiere_chauffage check (type_chaudiere_chauffage in ("STANDARD", "AIR-EAU", "A CONDENSATION", "AUTRES", "AIR-AIR", "GEOTHERME", "HPE"))
+    constraint ck_energieavt_chauffage check (energie_avt_travaux_chauffage in ('AUTRES', 'BOIS', 'ELECTRICITE', 'FIOUL', 'GAZ')),
+    constraint ck_energieinst_chauffage check (energie_installee_chauffage in ('AUTRES', 'BOIS', 'ELECTRICITE', 'FIOUL', 'GAZ')),
+    constraint ck_generateur_chauffage check (generateur_chauffage in ('AUTRES', 'CHAUDIERE', 'INSERT', 'PAC', 'POELE', 'RADIATEUR')),
+    constraint ck_chaudiere_chauffage check (type_chaudiere_chauffage in ('STANDARD', 'AIR-EAU', 'A CONDENSATION', 'AUTRES', 'AIR-AIR', 'GEOTHERME', 'HPE'))
 );
 
 create table Photovoltaiques (
@@ -80,5 +80,5 @@ create table Photovoltaiques (
     puissance_installee_photovoltaique INTEGER,
     type_panneaux_photovoltaique TEXT,
     constraint fk_photovoltaiques foreign key (id_travaux) references Travaux(id_travaux),
-    constraint ck_photovoltaiques check (type_panneaux_photovoltaique in ("MONOCRISTALLIN", "POLYCRISTALLIN"))
+    constraint ck_photovoltaiques check (type_panneaux_photovoltaique in ('MONOCRISTALLIN', 'POLYCRISTALLIN'))
 );
