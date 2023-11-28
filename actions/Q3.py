@@ -23,10 +23,11 @@ class Window(tk.Toplevel):
 
         # Affichage du label, de la case de saisie et du bouton valider
         ttk.Label(self, text='Veuillez indiquer une région :', anchor="center", font=('Helvetica', '10', 'bold')).grid(row=1, column=0)
-        #TODO Q3 C'est cette partie que l'on souhaite changer pour un choix dynamique de la région
-        self.input = ttk.Entry(self)
-        self.input.grid(row=1, column=1)
-        self.input.bind('<Return>', self.searchRegion) # On bind l'appui de la touche entrée sur la case de saisie, on peut donc utiliser soit la touche entrée soit le bouton valider
+
+        regions = ['GUADELOUPE', 'MARTINIQUE', 'GUYANE', 'REUNION', 'MAYOTTE', 'ILE-DE-FRANCE', 'CENTRE', 'BOURGOGNE FRANCHE COMTE', 'NORMANDIE', 'HAUTS DE FRANCE', 'GRAND EST', 'PAYS DE LA LOIRE', 'BREATGNE', 'NOUVELLE AQUITAINE', 'OCCITANIE', 'AUVERGNE RHONE ALPES', "PROVENGE-ALPES-COTE D'AZUR"]
+        self.region_var = tk.StringVar()
+        self.region_combobox = ttk.Combobox(self, textvariable=self.region_var, values=regions)
+        self.region_combobox.grid(row=1, column=1)
         ttk.Button(self, text='Valider', command=self.searchRegion).grid(row=1, column=2)
 
         # On place un label sans texte, il servira à afficher les erreurs
@@ -45,18 +46,19 @@ class Window(tk.Toplevel):
     # La fonction prend un argument optionnel event car elle peut être appelée de deux manières :
     # Soit via le bouton Valider, dans ce cas aucun event n'est fourni
     # Soit via le bind qui a été fait sur la case de saisie quand on appuie sur Entrée, dans ce cas bind fournit un event (que l'on utilise pas ici)
-    # TODO Q3 Modifier la fonction searchRegion pour un choix dynamique de la région
+
     def searchRegion(self, event = None):
 
         # On vide le treeView (pour rafraichir les données si quelque chose était déjà présent)
         self.treeView.delete(*self.treeView.get_children())
 
         # On récupère la valeur saisie dans la case
-        region = self.input.get()
+        region = self.region_var.get()
+
 
         # Si la saisie est vide, on affiche une erreur
         if len(region) == 0:
-            self.errorLabel.config(foreground='red', text="Veuillez saisir une région !")
+            self.errorLabel.config(foreground='red', text="Veuillez sélectionner une région !")
 
         # Si la saisie contient quelque chose
         else :

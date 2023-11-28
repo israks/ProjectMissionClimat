@@ -101,14 +101,14 @@ def insertDB():
 
         # On ajoute les Travaux d'Isolations dans Travaux
         read_csv_file(
-            "data/csv/Isolations.csv", ';',
-            "insert into Travaux values ({}, {}, {}, '{}', {})",
-            ['cout_total_ht', 'cout_induit_ht', 'annee_travaux', 'type_logement', 'annee_construction']
+            "data/csv/Isolation.csv", ';',
+            "insert into Travaux (cout_total_ht_travaux, cout_induit_ht_travaux, annee_travaux, type_logement_travaux, annee_construction_logement_travaux, code_region) values ({}, {}, {}, '{}', {}, {})",
+            ['cout_total_ht', 'cout_induit_ht', 'annee_travaux', 'type_logement', 'annee_construction', 'code_region']
         )
 
         # On ajoute les Isolations dans la table Isolations
         read_csv_file(
-            "data/csv/Isolations.csv", ';',
+            "data/csv/Isolation.csv", ';',
             "insert into Isolations values ('{}', '{}', {}, {})",
             ['poste_isolation', 'isolant', 'epaisseur', 'surface']
         )
@@ -116,8 +116,8 @@ def insertDB():
         # On ajoute les Travaux de Chauffage dans Travaux
         read_csv_file(
             "data/csv/Chauffage.csv", ';',
-            "insert into Travaux values ({}, {}, {}, '{}', {})",
-            ['cout_total_ht', 'cout_induit_ht', 'annee_travaux', 'type_logement', 'annee_construction']
+            "insert into Travaux (cout_total_ht_travaux, cout_induit_ht_travaux, annee_travaux, type_logement_travaux, annee_construction_logement_travaux, code_region) values ({}, {}, {}, '{}', {}, {})",
+            ['cout_total_ht', 'cout_induit_ht', 'annee_travaux', 'type_logement', 'annee_construction', 'code_region']
         )
 
         # On ajoute les Chauffages dans la table Chauffages
@@ -130,8 +130,8 @@ def insertDB():
         # On ajoute les Travaux de Photovolatiques dans Travaux
         read_csv_file(
             "data/csv/Photovoltaique.csv", ';',
-            "insert into Travaux values ({}, {}, {}, '{}', {})",
-            ['cout_total_ht', 'cout_induit_ht', 'annee_travaux', 'type_logement', 'annee_construction']
+            "insert into Travaux (cout_total_ht_travaux, cout_induit_ht_travaux, annee_travaux, type_logement_travaux, annee_construction_logement_travaux, code_region) values ({}, {}, {}, '{}', {}, {})",
+            ['cout_total_ht', 'cout_induit_ht', 'annee_travaux', 'type_logement', 'annee_construction', 'code_region']
         )
 
         # On ajoute les Photovoltaiques dans Photovoltaiques
