@@ -110,7 +110,7 @@ def insertDB():
             ['poste_isolation', 'isolant', 'epaisseur', 'surface']
         )
 
-        # On ajoute les travaux de chauffage dans les tables Travaux et Chauffage
+        # On ajoute les travaux de chauffage dans les tables Travaux et Chauffages
         read_csv_file_travaux(
             "data/csv/Chauffage.csv", ';',
             "insert into Travaux (cout_total_ht_travaux, cout_induit_ht_travaux, annee_travaux, type_logement_travaux, annee_construction_logement_travaux, code_region) values ({}, {}, {}, '{}', '{}', {})",
