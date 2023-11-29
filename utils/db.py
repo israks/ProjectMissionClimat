@@ -96,48 +96,48 @@ def insertDB():
         read_csv_file(
             "data/csv/Communes.csv", ';',
             "insert into Communes values ({}, '{}', '{}', {}, {}, {}, {}, {}, '{}')",
-            ['Code Commune', 'Commune', 'Statut', 'Altitude Moyenne', 'Population', 'Superficie', 'Code Canton', 'Code Arrondissement', 'Code Département']
+            ['Code Commune', 'Commune', 'Statut', 'Altitude Moyenne', 'Population', 'Superficie', 'Code Canton',
+             'Code Arrondissement', 'Code Département']
         )
 
         # On ajoute les Travaux d'Isolations dans Travaux
-        read_csv_file(
-            "data/csv/Isolation.csv", ';',
-            "insert into Travaux (cout_total_ht_travaux, cout_induit_ht_travaux, annee_travaux, type_logement_travaux, annee_construction_logement_travaux, code_region) values ({}, {}, {}, '{}', {}, {})",
-            ['cout_total_ht', 'cout_induit_ht', 'annee_travaux', 'type_logement', 'annee_construction', 'code_region']
-        )
+        #read_csv_file(
+        #    "data/csv/Isolation.csv", ';',
+        #    "insert into Travaux (cout_total_ht_travaux, cout_induit_ht_travaux, annee_travaux, type_logement_travaux, annee_construction_logement_travaux, code_region) values ({}, {}, {}, '{}', {}, {})",
+        #    ['cout_total_ht', 'cout_induit_ht', 'annee_travaux', 'type_logement', 'annee_construction', 'code_region']
+        #)
 
         # On ajoute les Isolations dans la table Isolations
-        read_csv_file(
+        #read_csv_file(
+        #    "data/csv/Isolation.csv", ';',
+        #    "insert into Isolations (poste_isolation, isolant_isolation, epaisseur_isolation, surface_isolation) values ('{}', '{}', {}, {})",
+        #    ['poste_isolation', 'isolant', 'epaisseur', 'surface']
+        #)
+
+        # On ajoute les travaux d'isolation dans les tables Travaux et Isolations
+        read_csv_file_travaux(
             "data/csv/Isolation.csv", ';',
-            "insert into Isolations (poste_isolation, isolant_isolation, epaisseur_isolation, surface_isolation) values ('{}', '{}', {}, {})",
+            "insert into Travaux (cout_total_ht_travaux, cout_induit_ht_travaux, annee_travaux, type_logement_travaux, annee_construction_logement_travaux, code_region) values ({}, {}, {}, '{}', '{}', {})",
+            "insert into Isolations values ({}, '{}', '{}', {}, {})",
+            ['cout_total_ht', 'cout_induit_ht', 'annee_travaux', 'type_logement', 'annee_construction', 'code_region'],
             ['poste_isolation', 'isolant', 'epaisseur', 'surface']
         )
 
-        # On ajoute les Travaux de Chauffage dans Travaux
-        read_csv_file(
+        # On ajoute les travaux de chauffage dans les tables Travaux et Chauffage
+        read_csv_file_travaux(
             "data/csv/Chauffage.csv", ';',
-            "insert into Travaux (cout_total_ht_travaux, cout_induit_ht_travaux, annee_travaux, type_logement_travaux, annee_construction_logement_travaux, code_region) values ({}, {}, {}, '{}', {}, {})",
-            ['cout_total_ht', 'cout_induit_ht', 'annee_travaux', 'type_logement', 'annee_construction', 'code_region']
-        )
-
-        # On ajoute les Chauffages dans la table Chauffages
-        read_csv_file(
-            "data/csv/Chauffage.csv", ';',
-            "insert into Chauffages (energie_avt_travaux_chauffage, energie_installee_chauffage, generateur_chauffage, type_chaudiere_chauffage) values ('{}', '{}', '{}', '{}')",
+            "insert into Travaux (cout_total_ht_travaux, cout_induit_ht_travaux, annee_travaux, type_logement_travaux, annee_construction_logement_travaux, code_region) values ({}, {}, {}, '{}', '{}', {})",
+            "insert into Chauffages values ({}, '{}', '{}', '{}', '{}')",
+            ['cout_total_ht', 'cout_induit_ht', 'annee_travaux', 'type_logement', 'annee_construction', 'code_region'],
             ['energie_chauffage_avt_travaux', 'energie_chauffage_installee', 'generateur', 'type_chaudiere']
         )
 
-        # On ajoute les Travaux de Photovolatiques dans Travaux
-        read_csv_file(
+        # On ajoute les travaux de panneaux photovolatiques dans les tables Travaux et Photovoltaiques
+        read_csv_file_travaux(
             "data/csv/Photovoltaique.csv", ';',
-            "insert into Travaux (cout_total_ht_travaux, cout_induit_ht_travaux, annee_travaux, type_logement_travaux, annee_construction_logement_travaux, code_region) values ({}, {}, {}, '{}', {}, {})",
-            ['cout_total_ht', 'cout_induit_ht', 'annee_travaux', 'type_logement', 'annee_construction', 'code_region']
-        )
-
-        # On ajoute les Photovoltaiques dans Photovoltaiques
-        read_csv_file(
-            "data/csv/Photovoltaique.csv", ';',
-            "insert into Photovoltaiques (puissance_installee_photovoltaique, type_panneaux_photovoltaique) values ({}, '{}')",
+            "insert into Travaux (cout_total_ht_travaux, cout_induit_ht_travaux, annee_travaux, type_logement_travaux, annee_construction_logement_travaux, code_region) values ({}, {}, {}, '{}', '{}', {})",
+            "insert into Photovoltaiques values ({}, {}, '{}')",
+            ['cout_total_ht', 'cout_induit_ht', 'annee_travaux', 'type_logement', 'annee_construction', 'code_region'],
             ['puissance_installee', 'type_panneaux']
         )
 
@@ -176,9 +176,59 @@ def read_csv_file(csvFile, separator, query, columns):
             formatedQuery = query.format(*tab)
 
             # On affiche la requête pour comprendre la construction ou débugger !
-            #print(formatedQuery)
+            print(formatedQuery)
 
             cursor.execute(formatedQuery)
         except IntegrityError as err:
             print(err)
 
+
+def read_csv_file_travaux(csvFile, separator, query_travaux, query_type, columns_travaux, columns_type):
+    # Lecture du fichier CSV csvFile avec le séparateur separator
+    # pour chaque ligne, exécution des requêtes query_travaux et query_type
+    # en les formatant avec les colonnes columns_travaux et columns_type
+
+    df = pandas.read_csv(csvFile, sep=separator)
+    df = df.where(pandas.notnull(df), 'null')
+
+    cursor = data.cursor()
+
+    for ix, row in df.iterrows():
+        try:
+            tab_travaux = []
+            tab_type = []
+
+            for i in range(len(columns_travaux)):
+                if isinstance(row[columns_travaux[i]], str):
+                    row[columns_travaux[i]] = row[columns_travaux[i]].replace("'", "''")
+                tab_travaux.append(row[columns_travaux[i]])
+
+            # Formatage de la requête pour la table Travaux
+            formatedQueryTravaux = query_travaux.format(*tab_travaux)
+
+            print(formatedQueryTravaux)
+
+            # Exécution de la requête pour la table Travaux
+            cursor.execute(formatedQueryTravaux)
+
+            # Récupération de l'id_travaux généré automatiquement
+            id_travaux = cursor.lastrowid
+
+            for i in range(len(columns_type)):
+                if isinstance(row[columns_type[i]], str):
+                    row[columns_type[i]] = row[columns_type[i]].replace("'", "''")
+                tab_type.append(row[columns_type[i]])
+
+            # Ajout de l'id_travaux à la liste pour la table Isolations
+            tab_type.insert(0, id_travaux)
+
+            # Formatage de la requête pour la table Isolations
+            formatedQueryType = query_type.format(*tab_type)
+
+            print(formatedQueryType)
+
+            # Exécution de la requête pour la table Isolations
+            cursor.execute(formatedQueryType)
+
+        except IntegrityError as err:
+            print(err)
