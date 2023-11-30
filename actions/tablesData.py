@@ -122,9 +122,9 @@ class Window(tk.Toplevel):
         scrollbar.grid(row=0, column=1, sticky="ns")
 
         # Travaux
-        columns = ('id_travaux', 'cout_total_ht_travaux', 'cout_induit_ht_travaux', 'annee_travaux', 'type_logement_travaux', 'annee_construction_logement_travaux')
+        columns = ('id_travaux', 'cout_total_ht_travaux', 'cout_induit_ht_travaux', 'date_travaux', 'type_logement_travaux', 'annee_construction_logement_travaux')
         query = """
-            SELECT id_travaux, cout_total_ht_travaux, cout_induit_ht_travaux, annee_travaux, type_logement_travaux, annee_construction_logement_travaux
+            SELECT id_travaux, cout_total_ht_travaux, cout_induit_ht_travaux, date_travaux, type_logement_travaux, annee_construction_logement_travaux
             FROM Travaux
             ORDER BY id_travaux
         """

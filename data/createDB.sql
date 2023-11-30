@@ -43,7 +43,7 @@ create table Travaux (
     id_travaux INTEGER,
     cout_total_ht_travaux FLOAT,
     cout_induit_ht_travaux FLOAT,
-    annee_travaux INTEGER,
+    date_travaux DATE,
     type_logement_travaux TEXT,
     annee_construction_logement_travaux TEXT,
     code_region INTEGER,
