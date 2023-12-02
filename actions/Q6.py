@@ -42,7 +42,7 @@ class Window(tk.Toplevel):
         query2 = """
             SELECT strftime('%m', date_travaux) as mois, SUM(cout_total_ht_travaux) as total_cout_travaux
             FROM Travaux JOIN Departements USING (code_region)
-            WHERE code_departement = 13 AND strftime('%Y', date_travaux) = '2018'
+            WHERE strftime('%Y', date_travaux) = '2018' AND code_departement = 13 
             GROUP BY mois
         """
 

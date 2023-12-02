@@ -105,8 +105,8 @@ def insertDB():
         # On ajoute les travaux d'isolation dans les tables Travaux et Isolations
         read_csv_file_travaux(
             "data/csv/Isolation.csv", ';',
-            "insert into Travaux (cout_total_ht_travaux, cout_induit_ht_travaux, date_travaux, type_logement_travaux, annee_construction_logement_travaux, code_region) values ({}, {}, '{}', '{}', '{}', {})",
-            "insert into Isolations values ({}, '{}', '{}', {}, {})",
+            "insert into Travaux (cout_total_ht_travaux, cout_induit_ht_travaux, date_travaux, type_logement_travaux, annee_construction_logement_travaux, code_region) values (?, ?, ?, ?, ?, ?)",
+            "insert into Isolations values (?, ?, ?, ?, ?)",
             ['cout_total_ht', 'cout_induit_ht', 'date_x', 'type_logement', 'annee_construction', 'code_region'],
             ['poste_isolation', 'isolant', 'epaisseur', 'surface']
         )
@@ -114,8 +114,8 @@ def insertDB():
         # On ajoute les travaux de chauffage dans les tables Travaux et Chauffages
         read_csv_file_travaux(
             "data/csv/Chauffage.csv", ';',
-            "insert into Travaux (cout_total_ht_travaux, cout_induit_ht_travaux, date_travaux, type_logement_travaux, annee_construction_logement_travaux, code_region) values ({}, {}, '{}', '{}', '{}', {})",
-            "insert into Chauffages values ({}, '{}', '{}', '{}', '{}')",
+            "insert into Travaux (cout_total_ht_travaux, cout_induit_ht_travaux, date_travaux, type_logement_travaux, annee_construction_logement_travaux, code_region) values (?, ?, ?, ?, ?, ?)",
+            "insert into Chauffages values (?, ?, ?, ?, ?)",
             ['cout_total_ht', 'cout_induit_ht', 'date_x', 'type_logement', 'annee_construction', 'code_region'],
             ['energie_chauffage_avt_travaux', 'energie_chauffage_installee', 'generateur', 'type_chaudiere']
         )
@@ -123,8 +123,8 @@ def insertDB():
         # On ajoute les travaux de panneaux photovolatiques dans les tables Travaux et Photovoltaiques
         read_csv_file_travaux(
             "data/csv/Photovoltaique.csv", ';',
-            "insert into Travaux (cout_total_ht_travaux, cout_induit_ht_travaux, date_travaux, type_logement_travaux, annee_construction_logement_travaux, code_region) values ({}, {}, '{}', '{}', '{}', {})",
-            "insert into Photovoltaiques values ({}, {}, '{}')",
+            "insert into Travaux (cout_total_ht_travaux, cout_induit_ht_travaux, date_travaux, type_logement_travaux, annee_construction_logement_travaux, code_region) values (?, ?, ?, ?, ?, ?)",
+            "insert into Photovoltaiques values (?, ?, ?)",
             ['cout_total_ht', 'cout_induit_ht', 'date_x', 'type_logement', 'annee_construction', 'code_region'],
             ['puissance_installee', 'type_panneaux']
         )
@@ -178,7 +178,7 @@ def read_csv_file_travaux(csvFile, separator, query_travaux, query_type, columns
     # en les formatant avec les colonnes columns_travaux et columns_type
 
     df = pandas.read_csv(csvFile, sep=separator)
-    df = df.where(pandas.notnull(df), 'null')
+    df = df.where(pandas.notnull(df), None)
 
     cursor = data.cursor()
 
@@ -201,12 +201,13 @@ def read_csv_file_travaux(csvFile, separator, query_travaux, query_type, columns
                     tab_travaux.append(row[columns_travaux[i]])
 
             # Formatage de la requête pour la table Travaux
-            formatedQueryTravaux = query_travaux.format(*tab_travaux)
-
-            print(formatedQueryTravaux)
+            #formatedQueryTravaux = query_travaux.format(*tab_travaux)
+            #print(formatedQueryTravaux)
 
             # Exécution de la requête pour la table Travaux
-            cursor.execute(formatedQueryTravaux)
+            #cursor.execute(formatedQueryTravaux)
+
+            cursor.execute(query_travaux, tuple(tab_travaux))
 
             # Récupération de l'id_travaux généré automatiquement
             id_travaux = cursor.lastrowid
@@ -220,12 +221,12 @@ def read_csv_file_travaux(csvFile, separator, query_travaux, query_type, columns
             tab_type.insert(0, id_travaux)
 
             # Formatage de la requête pour la table du type travaux
-            formatedQueryType = query_type.format(*tab_type)
-
-            print(formatedQueryType)
-
+            #formatedQueryType = query_type.format(*tab_type)
+            #print(formatedQueryType)
             # Exécution de la requête pour la table Isolations
-            cursor.execute(formatedQueryType)
+            #cursor.execute(formatedQueryType)
+
+            cursor.execute(query_type, tuple(tab_type))
 
         except IntegrityError as err:
             print(err)
