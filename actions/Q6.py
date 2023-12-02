@@ -42,7 +42,7 @@ class Window(tk.Toplevel):
         query2 = """
             SELECT strftime('%m', date_travaux) as mois, SUM(cout_total_ht_travaux) as total_cout_travaux
             FROM Travaux JOIN Departements USING (code_region)
-            WHERE code_departement = 75 AND strftime('%Y', date_travaux) = '2018'
+            WHERE code_departement = 13 AND strftime('%Y', date_travaux) = '2018'
             GROUP BY mois
         """
 
@@ -50,12 +50,7 @@ class Window(tk.Toplevel):
         result2 = []
         try:
             cursor = db.data.cursor()
-            cursor.execute(query2)
-            result2 = cursor.fetchall()
-
-            print("Résultats de la requête 2:")
-            for row in result2:
-                print(f"Mois: {row[0]}, Total Cout Travaux: {row[1]}")
+            result2 = cursor.execute(query2)
 
         except Exception as e:
             print("Erreur : " + repr(e))
@@ -63,25 +58,35 @@ class Window(tk.Toplevel):
         tabmois_travaux = []
         tabcouts = []
 
-        for rows in result2:
-            tabmois_travaux.append(rows[0])
-            tabcouts.append(rows[1])
+        for row in result2:
+            tabmois_travaux.append(row[0])
+            tabcouts.append(row[1])
+
+        datetime_dates2 = [datetime.strptime(date, '%m') for date in tabmois_travaux]
+
 
         fig = Figure(figsize=(10, 6), dpi=100)
         plot1 = fig.add_subplot(111)
 
         # Plot des températures minimales moyennes
-        plot1.plot(range(len(datetime_dates)), tabmin, color='red', label='temp min moyenne')
-        # Ajout de la deuxième série de données sur le même subplot
-        plot1.plot(range(len(datetime_dates)), tabcouts, color='green', label='cout total travaux')
+        plot1.plot(range(len(datetime_dates)), tabmin, color='red', label='Moyenne de la température minimum')
 
         plot1.set_xticks(range(len(datetime_dates)))
         plot1.set_xticklabels(tabmois_temp, rotation=45, ha="right")
 
-        plot1.set_xlabel('mois')
+        plot1.set_xlabel('Mois')
         plot1.set_ylabel('Moyenne de la température miniminum')
 
         plot1.legend()
+
+
+        # Ajout de la deuxième série de données sur le même subplot
+        plot2 = plot1.twinx()
+        plot2.plot(range(len(datetime_dates2)), tabcouts, color='green', label='Coût total travaux')
+        plot2.set_ylabel('Coût total travaux')
+
+        plot2.legend()
+
 
         # Affichage du graphique
         canvas = FigureCanvasTkAgg(fig, master=self)
@@ -90,4 +95,5 @@ class Window(tk.Toplevel):
 
         print(tabmois_temp)
         print(tabmin)
+        print(tabmois_travaux)
         print(tabcouts)

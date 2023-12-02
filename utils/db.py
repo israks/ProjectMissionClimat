@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 from sqlite3 import IntegrityError
 import pandas
 
@@ -45,42 +46,42 @@ def insertDB():
         # On ajoute les anciennes régions
         read_csv_file(
             "data/csv/Communes.csv", ';',
-            "insert into Regions values ({},'{}')",
+            "insert into Regions values (?,?)",
             ['Code Région', 'Région']
         )
 
         # On ajoute les nouvelles régions
         read_csv_file(
             "data/csv/AnciennesNouvellesRegions.csv", ';',
-            "insert into Regions values ({},'{}')",
+            "insert into Regions values (?,?)",
             ['Nouveau Code', 'Nom Officiel Région Majuscule']
         )
 
         # On ajoute les départements référencés avec les anciennes régions
         read_csv_file(
             "data/csv/Communes.csv", ';',
-            "insert into Departements (code_departement, nom_departement, code_region) values ('{}','{}', {})",
+            "insert into Departements (code_departement, nom_departement, code_region) values (?,?,?)",
             ['Code Département', 'Département', 'Code Région']
         )
 
         # On renseigne la zone climatique des départements
         read_csv_file(
             "data/csv/ZonesClimatiques.csv", ';',
-            "update Departements set zone_climatique = '{}' where code_departement = '{}'",
+            "update Departements set zone_climatique = ? where code_departement = ?",
             ['zone_climatique', 'code_departement']
         )
 
         # On modifie les codes région des départements pour les codes des nouvelles régions
         read_csv_file(
             "data/csv/AnciennesNouvellesRegions.csv", ';',
-            "update Departements set code_region = {} where code_region = {}",
+            "update Departements set code_region = ? where code_region = ?",
             ['Nouveau Code', 'Anciens Code']
         )
 
         # On supprime les anciennes régions, sauf si l'ancien code et le nouveau sont identiques (pour ne pas perdre les régions qui n'ont pas changé de code)
         read_csv_file(
             "data/csv/AnciennesNouvellesRegions.csv", ';',
-            "delete from Regions where code_region = {} and {} <> {}",
+            "delete from Regions where code_region = ? and ? <> ?",
             ['Anciens Code', 'Anciens Code', 'Nouveau Code']
         )
         print("Les erreurs UNIQUE constraint sont normales car on insère une seule fois les Regions et les Départemments")
@@ -88,14 +89,14 @@ def insertDB():
         # On ajoute les mesures
         read_csv_file(
              "data/csv/Mesures.csv", ';',
-             "insert into Mesures values ('{}','{}', {}, {}, {})",
+             "insert into Mesures values (?,?, ?, ?, ?)",
              ['code_insee_departement', 'date_obs', 'tmin', 'tmax', 'tmoy']
         )
 
         # On ajoute les communes
         read_csv_file(
             "data/csv/Communes.csv", ';',
-            "insert into Communes values ({}, '{}', '{}', {}, {}, {}, {}, {}, '{}')",
+            "insert into Communes values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             ['Code Commune', 'Commune', 'Statut', 'Altitude Moyenne', 'Population', 'Superficie', 'Code Canton',
              'Code Arrondissement', 'Code Département']
         )
@@ -148,7 +149,7 @@ def read_csv_file(csvFile, separator, query, columns):
     # Lecture du fichier CSV csvFile avec le séparateur separator
     # pour chaque ligne, exécution de query en la formatant avec les colonnes columns
     df = pandas.read_csv(csvFile, sep=separator)
-    df = df.where(pandas.notnull(df), 'null')
+    df = df.where(pandas.notnull(df), None)
 
     cursor = data.cursor()
     for ix, row in df.iterrows():
@@ -160,12 +161,13 @@ def read_csv_file(csvFile, separator, query, columns):
                     row[columns[i]] = row[columns[i]].replace("'","''")
                 tab.append(row[columns[i]])
 
-            formatedQuery = query.format(*tab)
-
+            #formatedQuery = query.format(*tab)
             # On affiche la requête pour comprendre la construction ou débugger !
-            print(formatedQuery)
+            #print(formatedQuery)
+            #cursor.execute(formatedQuery)
 
-            cursor.execute(formatedQuery)
+            cursor.execute(query, tuple(tab))
+
         except IntegrityError as err:
             print(err)
 
@@ -188,7 +190,15 @@ def read_csv_file_travaux(csvFile, separator, query_travaux, query_type, columns
             for i in range(len(columns_travaux)):
                 if isinstance(row[columns_travaux[i]], str):
                     row[columns_travaux[i]] = row[columns_travaux[i]].replace("'", "''")
-                tab_travaux.append(row[columns_travaux[i]])
+                if columns_travaux == 'date_x':
+                    date = row[columns_travaux[i]]
+                    if date.lower() != 'null':
+                        tabl = date.split('/')
+                        tab_travaux.append(datetime(int(tabl[2]), int(tabl[1]), int(tabl[0])).strftime("%Y-%m-%d"))
+                    else:
+                        tab_travaux.append('')
+                else:
+                    tab_travaux.append(row[columns_travaux[i]])
 
             # Formatage de la requête pour la table Travaux
             formatedQueryTravaux = query_travaux.format(*tab_travaux)
